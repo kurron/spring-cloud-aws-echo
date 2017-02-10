@@ -24,4 +24,10 @@ class HypermediaControl {
      */
     @JsonProperty( 'path' )
     String path
+
+    /**
+     * Hostname that serviced the request, response-only.
+     */
+    @JsonProperty( 'served-by' )
+    String servedBy
 }
