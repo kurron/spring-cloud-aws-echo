@@ -16,7 +16,7 @@ import java.time.Instant
 @Controller
 class RestGateway {
 
-    static String URL = 'http://169.254.169.254/latest/meta-data/hostname'
+    private static String URL = 'http://169.254.169.254/latest/meta-data/hostname'
 
     @RequestMapping( path = '/', method = [RequestMethod.GET], produces = ['application/json'] )
     ResponseEntity<HypermediaControl> handleGet( UriComponentsBuilder builder ) {
@@ -34,7 +34,7 @@ class RestGateway {
     private static String determineHostName() {
         final String hostname
         try {
-            hostname = new RestTemplate().getForObject(URL, String)
+            hostname = new RestTemplate().getForObject( URL, String )
         } catch ( Exception e ) {
             hostname = 'Not Running In AWS'
         }
