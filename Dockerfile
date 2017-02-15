@@ -7,6 +7,6 @@ EXPOSE 8080
 # switching to admin level user
 USER root
 
-ENTRYPOINT ["java", "-jar", "/opt/echo.jar"]
+ENTRYPOINT ["java", "-server", "-Xms128m", "-Xmx128m", "-Djava.awt.headless=true",  "-jar", "/opt/echo.jar"]
 
 COPY build/libs/echo-0.0.1-SNAPSHOT.jar /opt/echo.jar
