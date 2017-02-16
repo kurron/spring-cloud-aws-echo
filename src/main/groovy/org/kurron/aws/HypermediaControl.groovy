@@ -10,7 +10,7 @@ class HypermediaControl {
     /**
      * HTTP status of the service, response-only.
      */
-    @JsonProperty( 'status' )
+    @JsonProperty( 'status-code' )
     Integer status
 
     /**
@@ -22,7 +22,7 @@ class HypermediaControl {
     /**
      * Relative path of the completed service, response-only.
      */
-    @JsonProperty( 'path' )
+    @JsonProperty( 'calculated-return-path' )
     String path
 
     /**
@@ -30,4 +30,10 @@ class HypermediaControl {
      */
     @JsonProperty( 'served-by' )
     String servedBy
+
+    /**
+     * HTTP headers seen by the controller, response-only.
+     */
+    @JsonProperty( 'incoming-headers' )
+    Map<String, String> headers
 }

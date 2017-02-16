@@ -4,6 +4,7 @@ import groovy.transform.Memoized
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.client.RestTemplate
@@ -20,7 +21,7 @@ class RestGateway {
     private static String URL = 'http://169.254.169.254/latest/meta-data/hostname'
 
     @RequestMapping( path = '/', method = [RequestMethod.GET], produces = ['application/json'] )
-    ResponseEntity<HypermediaControl> handleGet( UriComponentsBuilder builder ) {
+    ResponseEntity<HypermediaControl> handleGet( UriComponentsBuilder builder, @RequestHeader Map<String, String> headers ) {
 
         String hostname = determineHostName( URL )
 
@@ -28,7 +29,8 @@ class RestGateway {
         def control = new HypermediaControl( status: HttpStatus.OK.value(),
                                              timestamp: Instant.now().toString(),
                                              path: responseURL,
-                                             servedBy: hostname )
+                                             servedBy: hostname,
+                                             headers: headers )
         ResponseEntity.ok( control )
     }
 
