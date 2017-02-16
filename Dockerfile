@@ -1,6 +1,6 @@
-FROM registry.transparent.com/transparent/oracle-jdk-8:1.8.0_112
+FROM kurron/docker-oracle-jdk-8
 
-MAINTAINER Ron Kurr "rkurr@jvmguy.com"
+MAINTAINER Ron Kurr "kurr@jvmguy.com"
 
 EXPOSE 8080
 
