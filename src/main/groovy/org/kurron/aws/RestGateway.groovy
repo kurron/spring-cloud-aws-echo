@@ -1,5 +1,6 @@
 package org.kurron.aws
 
+import groovy.transform.Memoized
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -21,7 +22,7 @@ class RestGateway {
     @RequestMapping( path = '/', method = [RequestMethod.GET], produces = ['application/json'] )
     ResponseEntity<HypermediaControl> handleGet( UriComponentsBuilder builder ) {
 
-        String hostname = determineHostName()
+        String hostname = determineHostName( URL )
 
         def responseURL = builder.build().toUriString()
         def control = new HypermediaControl( status: HttpStatus.OK.value(),
@@ -31,10 +32,11 @@ class RestGateway {
         ResponseEntity.ok( control )
     }
 
-    private static String determineHostName() {
+    @Memoized
+    private static String determineHostName( final String url ) {
         final String hostname
         try {
-            hostname = new RestTemplate().getForObject( URL, String )
+            hostname = new RestTemplate().getForObject( url, String )
         } catch ( Exception e ) {
             hostname = 'Not Running In AWS'
         }
