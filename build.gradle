@@ -1,14 +1,14 @@
 buildscript {
 	ext {
 		springBootVersion = '1.5.1.RELEASE'
-		springPlatformVersion = '1.0.0.RELEASE'
+		springDependencyManagementVersion = '1.0.0.RELEASE'
 	}
 	repositories {
 		jcenter()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath 'io.spring.gradle:dependency-management-plugin:${springPlatformVersion}'
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
 	}
 }
 
@@ -27,17 +27,16 @@ repositories {
 	jcenter()
 }
 
-defaultTasks << 'build'
+defaultTasks = ['clean', 'build']
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.codehaus.groovy:groovy')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 dependencyManagement {
 	imports {
-		mavenBom 'io.spring.platform:platform-bom:Athens-SR3'
+		mavenBom 'io.spring.platform:platform-bom:Brussels-RELEASE'
 	}
 }
