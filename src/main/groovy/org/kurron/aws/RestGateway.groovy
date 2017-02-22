@@ -45,17 +45,31 @@ class RestGateway {
         ResponseEntity.ok( control )
     }
 
-    private static HypermediaControl constructPublicResponse(Optional<String> elb, Optional<Integer> port, Optional<String> endpoint, Map<String, String> headers) {
+    private static HypermediaControl constructPublicResponse( Optional<String> elb, Optional<Integer> port, Optional<String> endpoint, Map<String, String> headers ) {
+        // simulate a multi-service call chain by calling another instance of ourselves
         def uri = UriComponentsBuilder.newInstance().scheme( 'http' ).host( elb.get() ).port( port.get() ).path( endpoint.get() ).build().toUri()
         def template = RestTemplateBuilder.newInstance().build()
-        def httpHeaders = headers.inject( new HttpHeaders() ) { HttpHeaders accumulator, entry ->
-            // Spring does not respect the x-forwarded-for header so we need to map it to x-forwarded-host
-            accumulator.add( entry.key == 'x-forwarded-for' ? 'x-forwarded-host' : entry.key, entry.value )
-            accumulator
-        } as HttpHeaders
-        def request = new HttpEntity<String>( httpHeaders )
+        def forwardingHeaders = copyIncomingHeaders( headers )
+        def request = new HttpEntity<String>( forwardingHeaders )
         def response = template.exchange(uri, HttpMethod.GET, request, HypermediaControl)
         response.body
+    }
+
+    private static HttpHeaders copyIncomingHeaders( Map<String, String> headers ) {
+        def forwardingHeaders = headers.inject( new HttpHeaders() ) { HttpHeaders accumulator, entry ->
+            accumulator.set(entry.key, entry.value)
+            accumulator
+        } as HttpHeaders
+        addMissingProxyHeaders( forwardingHeaders )
+        forwardingHeaders
+    }
+
+    // Amazon's ELB does not add the x-forwarded-host which Spring needs to properly construct the return link so we add it ourselves
+    private static void addMissingProxyHeaders( HttpHeaders forwardingHeaders ) {
+        if (!forwardingHeaders.containsKey( 'x-forwarded-host' ) ) {
+            def host = forwardingHeaders.getFirst( 'host' )
+            forwardingHeaders.set( 'x-forwarded-host', host )
+        }
     }
 
     private static HypermediaControl constructPrivateResponse( UriComponentsBuilder builder, Map<String, String> headers ) {
