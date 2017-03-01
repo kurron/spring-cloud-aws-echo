@@ -46,9 +46,9 @@ class RestGateway {
     }
 
     private static HypermediaControl constructPublicResponse( Optional<String> elb, Optional<Integer> port, Optional<String> endpoint, Map<String, String> headers ) {
+        println "constructPublicResponse ${Calendar.instance.time}"
         // simulate a multi-service call chain by calling another instance of ourselves
         def uri = UriComponentsBuilder.newInstance().scheme( 'http' ).host( elb.get() ).port( port.get() ).path( endpoint.get() ).build().toUri()
-        println "Calling service at ${uri as String}"
         def template = RestTemplateBuilder.newInstance().build()
         def forwardingHeaders = copyIncomingHeaders( headers )
         def request = new HttpEntity<String>( forwardingHeaders )
@@ -70,11 +70,11 @@ class RestGateway {
         if (!forwardingHeaders.containsKey( 'x-forwarded-host' ) ) {
             def host = forwardingHeaders.getFirst( 'host' )
             forwardingHeaders.set( 'x-forwarded-host', host )
-            println "Just added x-forwarded-host with a value of ${host}"
         }
     }
 
     private static HypermediaControl constructPrivateResponse( UriComponentsBuilder builder, Map<String, String> headers ) {
+        println "constructPrivateResponse ${Calendar.instance.time}"
         def hostname = determineHostName( URL )
         def responseURL = builder.build().toUriString()
         new HypermediaControl( status: HttpStatus.OK.value(),
