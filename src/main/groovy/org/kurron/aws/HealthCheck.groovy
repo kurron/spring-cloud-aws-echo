@@ -14,6 +14,7 @@ class HealthCheck implements HealthIndicator {
 
     @Override
     Health health() {
-        ThreadLocalRandom.current().nextBoolean() ? Health.up().build() : Health.down().build()
+        def percent = ThreadLocalRandom.current().nextInt( 100 )
+        percent < 60 ? Health.up().build() : Health.down().build()
     }
 }
