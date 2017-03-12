@@ -21,6 +21,6 @@ phases:
 
 artifacts:
   files:
-    - 'libs
+    - 'libs/*'
   discard-paths: yes
   base-directory: build
