@@ -16,10 +16,33 @@ apply plugin: 'groovy'
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
 
-jar {
-	baseName = 'echo'
-	version = '0.0.1-SNAPSHOT'
+class ProjectVersion {
+    Integer major
+    Integer minor
+    Integer patch
+    String  branch
+
+    ProjectVersion( Integer major, Integer minor, Integer patch, String branch ) {
+        this.major = major
+        this.minor = minor
+        this.patch = patch
+        this.branch = branch
+    }
+
+    @Override
+    String toString() {
+        String release = '-SNAPSHOT'
+        if ( branch == 'master' ) {
+            release = 'RELEASE'
+        }
+        else if ( branch == 'development' ) {
+            release = 'MILESTONE'
+        }
+        "${major}.${minor}.${patch}.${release}"
+    }
 }
+
+version = new ProjectVersion( major.toInteger(), minor.toInteger(), patch.toInteger(), branch.toString() )
 
 sourceCompatibility = 1.8
 
