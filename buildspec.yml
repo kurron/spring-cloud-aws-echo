@@ -1,0 +1,25 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - echo Nothing to do in the install phase...
+
+  pre_build:
+    commands:
+      - echo Nothing to do in the pre_build phase...
+
+  build:
+    commands:
+      - ./gradlew --console plain --info --no-daemon --stacktrace
+
+  post_build:
+    commands:
+      - echo Nothing to do in the post_build phase...
+      - echo Build completed on `date`
+
+artifacts:
+  files:
+    - 'libs
+  discard-paths: yes
+  base-directory: build
