@@ -2,14 +2,11 @@ package org.kurron.aws
 
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator
-import org.springframework.stereotype.Component
-
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * We simulate a potentially sick service that should get retired by ECS.
  */
-@Component
 class HealthCheck implements HealthIndicator {
 
     /**
@@ -18,13 +15,12 @@ class HealthCheck implements HealthIndicator {
     private final AtomicInteger visits = new AtomicInteger( 0 )
 
     /**
-     * Repeating sequence of health statuses.
+     * How many visits before we start reporting as unhealthy.
      */
-    private final String[] sequence = ['up', 'up', 'up', 'down', 'down', 'down']
+    private static final MAX_VISITS = 100
 
     @Override
     Health health() {
-        def status = sequence[visits.incrementAndGet() % sequence.length]
-        'up' == status ? Health.up().build() : Health.down().build()
+        visits.getAndIncrement() < MAX_VISITS ? Health.up().build() : Health.down().build()
     }
 }
