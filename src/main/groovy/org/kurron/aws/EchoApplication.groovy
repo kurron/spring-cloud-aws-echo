@@ -38,4 +38,9 @@ class EchoApplication {
 	HealthCheck healthCheck() {
 		new HealthCheck()
 	}
+
+    @Bean
+    TemplateCustomizer templateCustomizer() {
+        new TemplateCustomizer()
+    }
 }
