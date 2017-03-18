@@ -13,6 +13,9 @@ class TemplateCustomizer implements RestTemplateCustomizer {
     @Override
     void customize( RestTemplate restTemplate ) {
         def client = HttpClientBuilder.create().build()
-        restTemplate.setRequestFactory( new HttpComponentsClientHttpRequestFactory( client ) )
+        def factory = new HttpComponentsClientHttpRequestFactory(client)
+        factory.setConnectTimeout( 1 )
+        factory.setReadTimeout( 1 )
+        restTemplate.setRequestFactory( factory )
     }
 }

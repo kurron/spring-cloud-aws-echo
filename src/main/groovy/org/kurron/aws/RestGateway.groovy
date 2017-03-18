@@ -1,7 +1,7 @@
 package org.kurron.aws
 
 import groovy.transform.Memoized
-import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.*
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,7 +25,11 @@ class RestGateway {
      */
     private static String URL = 'http://169.254.169.254/latest/meta-data/hostname'
 
-    private final RestOperations theTemplate = new RestTemplateBuilder().setConnectTimeout( 1 ).setReadTimeout( 1 ).build()
+    /**
+     * Handles HTTP communication.
+     */
+    @Autowired
+    RestOperations template
 
     @GetMapping( path = '/', produces = ['application/json'] )
     ResponseEntity<HypermediaControl> echoInstanceInformation( UriComponentsBuilder builder,
@@ -45,11 +49,10 @@ class RestGateway {
         ResponseEntity.ok( control )
     }
 
-    private static HypermediaControl constructPublicResponse( Optional<String> elb, Optional<Integer> port, Optional<String> endpoint, Map<String, String> headers ) {
+    private HypermediaControl constructPublicResponse( Optional<String> elb, Optional<Integer> port, Optional<String> endpoint, Map<String, String> headers ) {
         println "constructPublicResponse ${Calendar.instance.time}"
         // simulate a multi-service call chain by calling another instance of ourselves
         def uri = UriComponentsBuilder.newInstance().scheme( 'http' ).host( elb.get() ).port( port.get() ).path( endpoint.get() ).build().toUri()
-        def template = RestTemplateBuilder.newInstance().build()
         def forwardingHeaders = copyIncomingHeaders( headers )
         def request = new HttpEntity<String>( forwardingHeaders )
         def response = template.exchange(uri, HttpMethod.GET, request, HypermediaControl)

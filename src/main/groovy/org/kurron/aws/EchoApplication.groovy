@@ -8,7 +8,9 @@ import com.amazonaws.xray.plugins.ECSPlugin
 import com.amazonaws.xray.strategy.sampling.LocalizedSamplingStrategy
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
+import org.springframework.web.client.RestTemplate
 
 import javax.servlet.Filter
 
@@ -42,5 +44,10 @@ class EchoApplication {
     @Bean
     TemplateCustomizer templateCustomizer() {
         new TemplateCustomizer()
+    }
+
+    @Bean
+    RestTemplate restTemplate( RestTemplateBuilder builder ) {
+        builder.build()
     }
 }
