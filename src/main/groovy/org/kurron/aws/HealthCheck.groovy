@@ -19,7 +19,7 @@ class HealthCheck implements HealthIndicator {
     /**
      * How many visits before we start reporting as unhealthy.
      */
-    private static final MAX_VISITS = ThreadLocalRandom.current().nextInt( 10, 150 )
+    private static final MAX_VISITS = ThreadLocalRandom.current().nextInt( 100, 250 )
 
     @Override
     Health health() {
