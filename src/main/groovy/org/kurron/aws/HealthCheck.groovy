@@ -2,6 +2,8 @@ package org.kurron.aws
 
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator
+
+import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -17,7 +19,7 @@ class HealthCheck implements HealthIndicator {
     /**
      * How many visits before we start reporting as unhealthy.
      */
-    private static final MAX_VISITS = 100
+    private static final MAX_VISITS = ThreadLocalRandom.current().nextInt( 10, 150 )
 
     @Override
     Health health() {
