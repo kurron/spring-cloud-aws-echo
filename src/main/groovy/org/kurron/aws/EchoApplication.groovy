@@ -31,8 +31,6 @@ class EchoApplication {
 		SpringApplication.run EchoApplication, args
 	}
 
-    // turn this off the X-Ray stuff to see if it causing the timeout errors
-/*
 	@Bean
 	Filter TracingFilter() {
 		new AWSXRayServletFilter( 'echo' )
@@ -42,7 +40,6 @@ class EchoApplication {
     TemplateCustomizer templateCustomizer() {
         new TemplateCustomizer()
     }
-*/
 
 	@Bean
 	HealthCheck healthCheck() {
