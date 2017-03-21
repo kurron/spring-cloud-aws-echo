@@ -36,10 +36,12 @@ class EchoApplication {
 		new AWSXRayServletFilter( 'echo' )
 	}
 
+/*
     @Bean
     TemplateCustomizer templateCustomizer() {
         new TemplateCustomizer()
     }
+*/
 
 	@Bean
 	HealthCheck healthCheck() {

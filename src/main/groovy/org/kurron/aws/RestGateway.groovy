@@ -53,6 +53,7 @@ class RestGateway {
         println "constructPublicResponse ${Calendar.instance.time}"
         // simulate a multi-service call chain by calling another instance of ourselves
         def uri = UriComponentsBuilder.newInstance().scheme( 'http' ).host( elb.get() ).port( port.get() ).path( endpoint.get() ).build().toUri()
+        println "Calling ${uri}"
         def forwardingHeaders = copyIncomingHeaders( headers )
         def request = new HttpEntity<String>( forwardingHeaders )
         def response = template.exchange(uri, HttpMethod.GET, request, HypermediaControl)
