@@ -19,7 +19,7 @@ class EchoApplication {
 
 	static {
 		def builder = AWSXRayRecorderBuilder.standard()
-				                            .withPlugin( new EC2Plugin() )
+//				                            .withPlugin( new EC2Plugin() )
 				                            .withPlugin( new ECSPlugin() )
 
 		def ruleFile = EchoApplication.getResource( '/sampling-rules.yml' )
