@@ -23,6 +23,7 @@ class EchoApplication {
 				                            .withPlugin( new ECSPlugin() )
 
 		def ruleFile = EchoApplication.getResource( '/sampling-rules.yml' )
+		println "ruleFile = ${ruleFile}"
 		builder.withSamplingStrategy( new LocalizedSamplingStrategy( ruleFile ) )
 		AWSXRay.setGlobalRecorder( builder.build() )
 	}
