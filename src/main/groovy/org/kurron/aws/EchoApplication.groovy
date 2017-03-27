@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 import org.springframework.web.client.RestTemplate
 
 import javax.servlet.Filter
@@ -19,7 +20,7 @@ class EchoApplication {
 
 	static {
 		def builder = AWSXRayRecorderBuilder.standard()
-//				                            .withPlugin( new EC2Plugin() )
+				                            .withPlugin( new EC2Plugin() )
 				                            .withPlugin( new ECSPlugin() )
 
 		def ruleFile = EchoApplication.getResource( '/sampling-rules.yml' )
@@ -33,11 +34,13 @@ class EchoApplication {
 	}
 
 	@Bean
+	@Profile( ['x-ray'] )
 	Filter TracingFilter() {
 		new AWSXRayServletFilter( 'echo' )
 	}
 
     @Bean
+	@Profile( ['x-ray'] )
     TemplateCustomizer templateCustomizer() {
         new TemplateCustomizer()
     }
@@ -46,7 +49,6 @@ class EchoApplication {
 	HealthCheck healthCheck() {
 		new HealthCheck()
 	}
-
 
     @Bean
     RestTemplate restTemplate( RestTemplateBuilder builder ) {
