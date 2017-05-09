@@ -36,4 +36,11 @@ class HypermediaControl {
      */
     @JsonProperty( 'incoming-headers' )
     Map<String, String> headers
+
+    /**
+     * Process environment seen by the controller, response-only.
+     */
+    @JsonProperty( 'environment' )
+    Map<String, String> environment
+
 }

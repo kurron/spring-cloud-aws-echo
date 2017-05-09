@@ -85,7 +85,8 @@ class RestGateway {
                                timestamp: Instant.now().toString(),
                                path: responseURL,
                                servedBy: hostname,
-                               headers: headers )
+                               headers: headers,
+                               environment: System.getenv() )
     }
 
     @Memoized
