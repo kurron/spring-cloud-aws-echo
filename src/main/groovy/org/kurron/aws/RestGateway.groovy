@@ -21,9 +21,14 @@ import java.time.Instant
 class RestGateway {
 
     /**
-     * The magic ip address that EC2 instance meta-data can be obtained from.
+     * The hostname of the instance.
      */
-    private static String URL = 'http://169.254.169.254/latest/meta-data/hostname'
+    private static String HOSTNAME_URL = 'http://169.254.169.254/latest/meta-data/hostname'
+
+    /**
+     * The availability zone the instance was launched in.
+     */
+    private static String AZ_URL = 'http://169.254.169.254/latest/meta-data/placement/availability-zone'
 
     /**
      * Handles HTTP communication.
@@ -79,26 +84,28 @@ class RestGateway {
 
     private static HypermediaControl constructPrivateResponse( UriComponentsBuilder builder, Map<String, String> headers ) {
         println "constructPrivateResponse ${Calendar.instance.time}"
-        def hostname = determineHostName( URL )
+        def hostname = queryInstanceMetaData(HOSTNAME_URL)
+        def availabilityZone = queryInstanceMetaData(AZ_URL)
+        def servedBy = "${hostname} in ${availabilityZone}"
         def responseURL = builder.build().toUriString()
         new HypermediaControl( status: HttpStatus.OK.value(),
                                timestamp: Instant.now().toString(),
                                path: responseURL,
-                               servedBy: hostname,
+                servedBy: servedBy,
                                headers: headers,
                                environment: System.getenv() )
     }
 
     @Memoized
-    private static String determineHostName( final String url ) {
-        final String hostname
+    private static String queryInstanceMetaData(final String url) {
+        final String response
         try {
-            hostname = new RestTemplate().getForObject( url, String )
+            response = new RestTemplate().getForObject(url, String)
         }
         catch ( Exception ignored ) {
-            hostname = 'Not Running In AWS'
+            response = 'Not Running In AWS'
         }
-        hostname
+        response
     }
 
 }
