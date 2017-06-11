@@ -31,6 +31,16 @@ class RestGateway {
     private static String AZ_URL = 'http://169.254.169.254/latest/meta-data/placement/availability-zone'
 
     /**
+     * The id of the instance.
+     */
+    private static String INSTANCE_ID_URL = 'http://169.254.169.254/latest/meta-data/instance-id'
+
+    /**
+     * The type of the instance.
+     */
+    private static String INSTANCE_TYPE_URL = 'http://169.254.169.254/latest/meta-data/instance-type'
+
+    /**
      * Handles HTTP communication.
      */
     @Autowired
@@ -86,7 +96,9 @@ class RestGateway {
         println "constructPrivateResponse ${Calendar.instance.time}"
         def hostname = queryInstanceMetaData(HOSTNAME_URL)
         def availabilityZone = queryInstanceMetaData(AZ_URL)
-        def servedBy = "${hostname} in ${availabilityZone}"
+        def instanceID = queryInstanceMetaData(INSTANCE_ID_URL)
+        def instanceType = queryInstanceMetaData(INSTANCE_TYPE_URL)
+        def servedBy = "${instanceType}:${availabilityZone}:${instanceID}:${hostname}"
         def responseURL = builder.build().toUriString()
         new HypermediaControl( status: HttpStatus.OK.value(),
                                timestamp: Instant.now().toString(),
