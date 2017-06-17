@@ -46,6 +46,7 @@ class EchoApplication {
     }
 
 	@Bean
+	@Profile( ['failing-health'] )
 	HealthCheck healthCheck() {
 		new HealthCheck()
 	}

@@ -103,7 +103,7 @@ class RestGateway {
         new HypermediaControl( status: HttpStatus.OK.value(),
                                timestamp: Instant.now().toString(),
                                path: responseURL,
-                servedBy: servedBy,
+                               servedBy: servedBy,
                                headers: headers,
                                environment: System.getenv() )
     }
