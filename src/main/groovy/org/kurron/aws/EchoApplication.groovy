@@ -55,4 +55,9 @@ class EchoApplication {
     RestTemplate restTemplate( RestTemplateBuilder builder ) {
         builder.build()
     }
+
+	@Bean
+	AwsInfoContributor awsInfoContributor() {
+		new AwsInfoContributor()
+	}
 }
