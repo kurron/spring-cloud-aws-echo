@@ -1,9 +1,13 @@
 #!/bin/bash
 
+echo To determine the IP address use docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' aws-echo
+
 CMD="docker run --cpus 1 \
                 --interactive \
                 --name aws-echo \
-                --network host \
+                --network bridge \
+                --publish-all \
+                --name aws-echo \
                 --rm \
                 --tty \
                 --memory 268435546 \
@@ -12,3 +16,4 @@ CMD="docker run --cpus 1 \
                 springcloudawsecho_echo:latest"
 echo $CMD
 $CMD
+

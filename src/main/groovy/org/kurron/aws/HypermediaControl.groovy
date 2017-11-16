@@ -43,4 +43,9 @@ class HypermediaControl {
     @JsonProperty( 'environment' )
     Map<String, String> environment
 
+    /**
+     * List of ip addresses detected by the application.
+     */
+    @JsonProperty( 'addresses' )
+    List<String> addresses
 }

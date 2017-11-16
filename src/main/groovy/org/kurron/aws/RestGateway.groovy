@@ -105,7 +105,16 @@ class RestGateway {
                                path: responseURL,
                                servedBy: servedBy,
                                headers: headers,
-                               environment: System.getenv() )
+                               environment: System.getenv(),
+                               addresses: gatherAddresses() )
+    }
+
+    @Memoized
+    private static List<String> gatherAddresses() {
+        def nets = NetworkInterface.getNetworkInterfaces().toList()
+        nets.collect {
+            it.getInetAddresses().toList().collect { it.hostAddress }
+        }.flatten() as List<String>
     }
 
     @Memoized
