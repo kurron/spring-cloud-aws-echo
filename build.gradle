@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.6.RELEASE'
+		springBootVersion = '1.5.7.RELEASE'
 		springDependencyManagementVersion = '1.0.3.RELEASE'
 	}
 	repositories {
@@ -69,7 +69,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-	    mavenBom 'io.spring.platform:platform-bom:Brussels-SR4'
+	    mavenBom 'io.spring.platform:platform-bom:Brussels-SR5'
 
             mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.39'
             mavenBom 'com.amazonaws:aws-xray-recorder-sdk-bom:1.0.5-beta'
