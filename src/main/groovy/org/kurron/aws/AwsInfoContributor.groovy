@@ -4,7 +4,7 @@ import groovy.transform.Memoized
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.info.Info
 import org.springframework.boot.actuate.info.InfoContributor
-import org.springframework.web.client.RestOperations
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -23,7 +23,7 @@ class AwsInfoContributor implements InfoContributor {
     private static String AZ_URL = 'http://169.254.169.254/latest/meta-data/placement/availability-zone'
 
     /**
-     * Uniquely indentifies this container instance.
+     * Uniquely identifies this container instance.
      */
     private static final CONTAINER_ID = UUID.randomUUID()
 
@@ -31,7 +31,15 @@ class AwsInfoContributor implements InfoContributor {
      * Handles HTTP communication.
      */
     @Autowired
-    RestOperations template
+    RestTemplateBuilder builder
+
+    /**
+     * Constructs a template with short timeout values.
+     * @return properly configured template.
+     */
+    RestTemplate newTemplate() {
+        builder.setConnectTimeout( 500 ).setReadTimeout( 500 ).build()
+    }
 
     @Override
     void contribute(Info.Builder builder) {
@@ -42,10 +50,13 @@ class AwsInfoContributor implements InfoContributor {
     }
 
     @Memoized
-    private static String queryInstanceMetaData(final String url) {
+    private String queryInstanceMetaData(final String url) {
+        println "queryInstanceMetaData ${Calendar.instance.time} ${url}"
+
         final String response
         try {
-            response = new RestTemplate().getForObject(url, String)
+            def template = newTemplate()
+            response = template.getForObject(url, String)
         }
         catch (Exception ignored) {
             response = 'Not Running In AWS'

@@ -2,6 +2,7 @@ package org.kurron.aws
 
 import groovy.transform.Memoized
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.*
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -44,7 +45,16 @@ class RestGateway {
      * Handles HTTP communication.
      */
     @Autowired
-    RestOperations template
+    RestTemplateBuilder builder
+
+    /**
+     * Constructs a template with short timeout values.
+     * @return properly configured template.
+     */
+    RestTemplate newTemplate() {
+        builder.setConnectTimeout( 500 ).setReadTimeout( 500 ).build()
+    }
+
 
     @GetMapping( path = '/', produces = ['application/json'] )
     ResponseEntity<HypermediaControl> echoInstanceInformation( UriComponentsBuilder builder,
@@ -71,7 +81,7 @@ class RestGateway {
         println "Calling ${uri}"
         def forwardingHeaders = copyIncomingHeaders( headers )
         def request = new HttpEntity<String>( forwardingHeaders )
-        def response = template.exchange(uri, HttpMethod.GET, request, HypermediaControl)
+        def response = newTemplate().exchange(uri, HttpMethod.GET, request, HypermediaControl)
         response.body
     }
 
@@ -92,7 +102,7 @@ class RestGateway {
         }
     }
 
-    private static HypermediaControl constructPrivateResponse( UriComponentsBuilder builder, Map<String, String> headers ) {
+    private HypermediaControl constructPrivateResponse( UriComponentsBuilder builder, Map<String, String> headers ) {
         println "constructPrivateResponse ${Calendar.instance.time}"
         def hostname = queryInstanceMetaData(HOSTNAME_URL)
         def availabilityZone = queryInstanceMetaData(AZ_URL)
@@ -118,10 +128,12 @@ class RestGateway {
     }
 
     @Memoized
-    private static String queryInstanceMetaData(final String url) {
+    private String queryInstanceMetaData(final String url) {
+        println "queryInstanceMetaData ${Calendar.instance.time} ${url}"
+
         final String response
         try {
-            response = new RestTemplate().getForObject(url, String)
+            response = template.getForObject(url, String)
         }
         catch ( Exception ignored ) {
             response = 'Not Running In AWS'

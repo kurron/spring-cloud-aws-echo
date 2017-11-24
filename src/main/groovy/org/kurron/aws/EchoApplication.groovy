@@ -51,11 +51,6 @@ class EchoApplication {
 		new HealthCheck()
 	}
 
-    @Bean
-    RestTemplate restTemplate( RestTemplateBuilder builder ) {
-        builder.build()
-    }
-
 	@Bean
 	AwsInfoContributor awsInfoContributor() {
 		new AwsInfoContributor()
