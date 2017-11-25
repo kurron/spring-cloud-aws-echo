@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.client.RestOperations
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -133,7 +132,7 @@ class RestGateway {
 
         final String response
         try {
-            response = template.getForObject(url, String)
+            response = newTemplate().getForObject(url, String)
         }
         catch ( Exception ignored ) {
             response = 'Not Running In AWS'
