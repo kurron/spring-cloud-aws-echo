@@ -13,7 +13,7 @@ CMD="docker run --cpus 1 \
                 --memory 268435546 \
                 --memory-swap 0 \
                 --volume /var/run/docker.sock:/var/run/docker.sock \
-                springcloudawsecho_echo:latest"
+                spring-cloud-aws-echo_echo:latest"
 echo $CMD
 $CMD
 
